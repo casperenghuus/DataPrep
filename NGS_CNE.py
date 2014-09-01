@@ -9,12 +9,13 @@ from decimal import *
 from tabulate import tabulate
 
 # Loads default paths
-CWD = os.getcwd()
-FASTQ_PATH = os.path.join(CWD, 'fq/')
-FASTA_PATH = os.path.join(CWD, 'fa/')
-OUTPUT_PATH = os.path.join(CWD, 'gz/')
-RESULTS_PATH = os.path.join(CWD, 'results/')
-REF_SEQ_FILE = os.path.join(CWD, 'fa/202.fixed.fa')
+# CWD = os.getcwd()
+# FASTQ_PATH = os.path.join(CWD, 'fq/')
+# FASTA_PATH = os.path.join(CWD, 'fa/')
+# OUTPUT_PATH = os.path.join(CWD, 'gz/')
+# RESULTS_PATH = os.path.join(CWD, 'results/')
+# REF_SEQ_FILE = os.path.join(CWD, 'fa/202.fixed.fa')
+CWD = '/mnt/sda1/My-Documents/Dropbox/casper_ecre/'
 DEFAULT_REGEX = '^s_G1_L001_R([1-2])_([0-9]+).fastq.([0-9]+).gz'
 DEFAULT_RESTRICTION_SITE_1 = 'CATATG'
 DEFAULT_RESTRICTION_SITE_2 = 'GGCGCGCC'
@@ -28,18 +29,17 @@ def load_fq_files(cwdir=CWD, target_regex=DEFAULT_REGEX):
     tuples contain the forward and reverse file from the same bin and
     with the same file number.
     '''
-
     # Required lists
     file_pairs = []
     forward_list = []
     reverse_list = []
 
     # Regex target to grab input files.
-    target = re.compile(target_regex)
+    target = re.compile('target_regex')
 
     # Searches through folders and files in the CWD. Grabs files
     # matching the regex
-    for root, dirs, files in os.walk(cwdir):
+    for root, dirs, files in os.walk(cwdir, followlinks=True):
         for file_string in files:
             file_match = target.search(file_string)
             if file_match:
@@ -454,7 +454,7 @@ def generate_file_list(get_files_regex, cwdir=CWD):
     target = re.compile(get_files_regex)
 
     # Prepares a list of files
-    for root, dirs, files in os.walk(cwdir):
+    for root, dirs, files in os.walk(cwdir, followlinks=True):
         for file_string in files:
             file_match = target.findall(file_string)
             if file_match:

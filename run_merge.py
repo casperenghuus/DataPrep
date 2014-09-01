@@ -5,12 +5,20 @@ import re # may be omitted
 import NGS_CNE
 
 # Set paths/files
-CWD = os.getcwd()
+# CWD = os.getcwd()
+CWD = '/mnt/sda1/My-Documents/Dropbox/casper_ecre/'
 file_output1 = os.path.join(
     CWD, 'results/sequences.allresults.txt')
 file_output2 = os.path.join(
     CWD, 'results/stats.allresults.txt')
-REF_SEQ_FILE = os.path.join(CWD, 'fa/202.fixed.fa')
+# REF_SEQ_FILE = os.path.join(CWD, 'fa/202.fixed.fa')
+
+target = re.compile('202.fixed.fa')
+for root, dirs, files in os.walk(CWD, followlinks=True):
+    for file_string in files:
+        file_match = target.search(file_string)
+        if file_match:
+            REF_SEQ_FILE = os.path.join(CWD, file_string)
 
 # Set parameters
 has_header = True
