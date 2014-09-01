@@ -15,7 +15,9 @@ from tabulate import tabulate
 # OUTPUT_PATH = os.path.join(CWD, 'gz/')
 # RESULTS_PATH = os.path.join(CWD, 'results/')
 # REF_SEQ_FILE = os.path.join(CWD, 'fa/202.fixed.fa')
-CWD = '/mnt/sda1/My-Documents/Dropbox/casper_ecre/'
+# CWD = '/mnt/sda1/My-Documents/Dropbox/casper_ecre/'
+FQ_DIR = '/scratch/cne/ecre/fq/202_hiseq_small/'
+CWD = '/scratch/cne/ecre/'
 DEFAULT_REGEX = '^s_G1_L001_R([1-2])_([0-9]+).fastq.([0-9]+).gz'
 DEFAULT_RESTRICTION_SITE_1 = 'CATATG'
 DEFAULT_RESTRICTION_SITE_2 = 'GGCGCGCC'
@@ -23,7 +25,7 @@ DEFAULT_ADAPTER1 = 'CATATGCGTAAAGGCGAAGAGCTGCTGTGTAGATCT'
 DEFAULT_ADAPTER2 = 'GGCGCGCCATGACTAAGCTTTTCATTGTCATGC'
 READ_TRIM_REGEX = '^(.*{restriction_site1})?(.*?)({restriction_site2}.*)?$'
 
-def load_fq_files(cwdir=CWD, target_regex=DEFAULT_REGEX):
+def load_fq_files(CWD=FQ_DIR, target_regex=DEFAULT_REGEX):
     '''
     Load files from folder and stores them in a list of tuples. the
     tuples contain the forward and reverse file from the same bin and
@@ -35,11 +37,11 @@ def load_fq_files(cwdir=CWD, target_regex=DEFAULT_REGEX):
     reverse_list = []
 
     # Regex target to grab input files.
-    target = re.compile('target_regex')
+    target = re.compile(target_regex)
 
     # Searches through folders and files in the CWD. Grabs files
     # matching the regex
-    for root, dirs, files in os.walk(cwdir, followlinks=True):
+    for root, dirs, files in os.walk(CWD, followlinks=True):
         for file_string in files:
             file_match = target.search(file_string)
             if file_match:
@@ -67,8 +69,7 @@ def load_fq_files(cwdir=CWD, target_regex=DEFAULT_REGEX):
                     # Appends the pairs as a tuple, (forward, reverse), to a
                     # list of file-pair-tuples.
                     file_pairs.append(
-                        (os.path.join(cwdir, 'fq/'+i), os.path.join(
-                            cwdir, 'fq/'+k)))
+                        (os.path.join(CWD, i), os.path.join(CWD, k)))
 
     return file_pairs
 
@@ -219,8 +220,10 @@ def initiate_seqprep(file_number, bin_number, file1, file2,
     '''
 
     # Set name prefixes for outputs
-    output_f_prefix = 'gz/output.'+os.path.split(file1)[1]
-    output_r_prefix = 'gz/output.'+os.path.split(file2)[1]
+    output_f_prefix = '/scratch/cne/ecre/counts/202_hiseq_small/output.'+os.path.split(
+    	file1)[1]
+    output_r_prefix = '/scratch/cne/ecre/counts/202_hiseq_small/output.'+os.path.split(
+    	file2)[1]
 
     # Run SeqPrep. Refer to manual for the different parameters.
     # Adapters are used.
@@ -232,7 +235,7 @@ def initiate_seqprep(file_number, bin_number, file1, file2,
         '-2', output_r_prefix,
         '-3', output_f_prefix[:-3]+'.disc.fq.gz',
         '-4', output_r_prefix[:-3]+'.disc.fq.gz',
-        '-s', 'gz/output.'+file_number+'.'+bin_number+'.M.fq.gz',
+        '-s', '/scratch/cne/ecre/counts/202_hiseq_small/output.'+file_number+'.'+bin_number+'.M.fq.gz',
         '-A', adapter1, '-B', adapter2,
         '-X', '1.0', '-g', '-L', '5'])
 
@@ -369,7 +372,7 @@ def grep_merged_read(
         # Total number of unmerged sequences:
         # Assumes equal number of lines in forward and reverse file
         unmerged_files = os.path.join(
-            CWD, 'gz/output.'+os.path.split(file1)[1])
+            CWD, 'counts/202_hiseq_small/output.'+os.path.split(file1)[1])
         command = 'zcat {input_file} | wc -l'.format(
             input_file=unmerged_files)
         unmerged_seqs = subprocess.Popen(
@@ -444,17 +447,20 @@ def grep_merged_read(
             percent_correct)+'%\n')
         fh.write('Total reference sequences:\t'+str(ref_seqs_number)+'\n')
 
-def generate_file_list(get_files_regex, cwdir=CWD):
+def generate_file_list(get_files_regex, CWD=CWD):
     '''Generates a list of files based on the regex given. Used to
     prepare a list of files when merging the result summaries'''
 
     sequence_list = []
     stats_list = []
 
+    # Specifies the folder where statistics may be found
+    CWD = os.path.join(CWD, 'counts/')
+    
     target = re.compile(get_files_regex)
 
     # Prepares a list of files
-    for root, dirs, files in os.walk(cwdir, followlinks=True):
+    for root, dirs, files in os.walk(CWD, followlinks=True):
         for file_string in files:
             file_match = target.findall(file_string)
             if file_match:
@@ -486,7 +492,7 @@ def merge_all(name_dict,
     unique_sequences = {}
 
     # Used to assert that there are an equal number of unique keys and values
-    assert len(name_dict.values()) == len(set(name_dict.values()))
+    assert len(set(name_dict.values())) == len(set(name_dict.values()))
 
     # Header for file:
     header = ['Name,', 'Total,']

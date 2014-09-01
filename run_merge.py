@@ -18,7 +18,7 @@ for root, dirs, files in os.walk(CWD, followlinks=True):
     for file_string in files:
         file_match = target.search(file_string)
         if file_match:
-            REF_SEQ_FILE = os.path.join(CWD, file_string)
+            REF_SEQ_FILE = os.path.join(root, file_string)
 
 # Set parameters
 has_header = True

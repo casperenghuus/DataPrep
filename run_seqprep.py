@@ -7,20 +7,20 @@ import NGS_CNE
 DEFAULT_REGEX = 's_G1_L001_R([1-2])_([0-9]+).fastq.([0-9]+).gz'
 # CWD = os.getcwd()
 # REF_SEQ_FILE = os.path.join(CWD, 'fa/202.fixed.fa')
-CWD = '/mnt/sda1/My-Documents/Dropbox/casper_ecre/'
-OUTPUT_PATH = os.path.join(CWD, 'gz/')
+CWD = '/scratch/cne/ecre/'
+# OUTPUT_PATH = os.path.join(CWD, '/')
 
 target = re.compile('202.fixed.fa')
 for root, dirs, files in os.walk(CWD, followlinks=True):
     for file_string in files:
         file_match = target.search(file_string)
         if file_match:
-            REF_SEQ_FILE = os.path.join(CWD, file_string)
+            REF_SEQ_FILE = os.path.join(root, file_string)
 
 
 def run_seqprep(file1, file2,
     default_regex=DEFAULT_REGEX,
-    output_path=OUTPUT_PATH,
+    CWD=CWD,
     ref_seq_file=REF_SEQ_FILE):
     '''
     Requires NGS_CNE.py to be in the same folder as this file.
@@ -43,9 +43,11 @@ def run_seqprep(file1, file2,
 
     # Prepare file names:
     merged_file_path = os.path.join(
-        output_path, 'output.'+file_number+'.'+bin_number+'.M.fq.gz')
-    sequence_output = 'results/sequences.results.'+file_number+'.'+bin_number+'.M.seq'
-    stats_output = 'results/stats.results.'+file_number+'.'+bin_number+'.M.txt'
+        CWD, '/output.'+file_number+'.'+bin_number+'.M.fq.gz')
+    sequence_output = os.path.join(
+    	CWD, 'results/sequences.results.'+file_number+'.'+bin_number+'.M.seq')
+    stats_output = os.path.join(
+    	CWD, 'results/stats.results.'+file_number+'.'+bin_number+'.M.txt')
 
     print '\n### Initiating SeqPrep #'
     print '### Paired files:', file1, '<>', file2
