@@ -182,11 +182,10 @@ def sort_to_bins(regex, file_list, number_position=2, bin_position=3):
             # unique numbers are kept (i.e. forward and reverse files would
             # generate duplicates)
             if file_number not in number_list:
-                print file_number
                 number_list.append(file_number)
-        print number_list
         # Test to see if numbers are in sequential order
         coherence_test = sorted(number_list)
+        print coherence_test
         # This is only True if the list is orderer in steps of +1
         # (it generates a duplicate sorted list used for a True/False statement)
         results = coherence_test == range(
