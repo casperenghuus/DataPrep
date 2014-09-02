@@ -161,7 +161,8 @@ def sort_to_bins(regex, file_list, number_position=2, bin_position=3):
     bin_list = []
     # Regex target
     target = re.compile(regex)
-
+    print len(file_list)
+    print '---------'
     # Assigns the maximum number of bins
     for i in range(1, len(file_list)+1):
         bin_i = []
