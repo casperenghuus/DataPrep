@@ -60,7 +60,7 @@ def run_seqprep(file1, file2,
     NGS_CNE.load_reference_fasta(ref_seq_file, has_header, dictionary)
 
     list_to_be_tested = NGS_CNE.load_fq_files()
-    print list_to_be_tested
+
     # Sort to bins to test for coherence:
     NGS_CNE.sort_to_bins(DEFAULT_REGEX, list_to_be_tested)
 
