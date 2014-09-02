@@ -186,6 +186,7 @@ def sort_to_bins(regex, file_list, number_position=2, bin_position=3):
         # Test to see if numbers are in sequential order
         coherence_test = sorted(number_list)
         print coherence_test
+        print range(number_list[0], number_list[-1]+1)
         # This is only True if the list is orderer in steps of +1
         # (it generates a duplicate sorted list used for a True/False statement)
         results = coherence_test == range(
