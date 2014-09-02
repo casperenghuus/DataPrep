@@ -183,19 +183,14 @@ def sort_to_bins(regex, file_list, number_position=2, bin_position=3):
             # generate duplicates)
             if file_number not in number_list:
                 number_list.append(file_number)
-        print '-------------'
-        print number_list
-        print '-------------'
+
         # Test to see if numbers are in sequential order
         coherence_test = sorted(number_list)
-        print coherence_test
-        print number_list
-        print range(number_list[0], number_list[-1]+1)
-        print '-------------'
+
         # This is only True if the list is orderer in steps of +1
         # (it generates a duplicate sorted list used for a True/False statement)
         results = coherence_test == range(
-            number_list[0], number_list[-1]+1)
+            coherence_test[0], coherence_test[-1]+1)
         # Raises error if the list is not in sequential order
         if results is False:
             raise IOError(
