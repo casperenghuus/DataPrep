@@ -16,7 +16,7 @@ from tabulate import tabulate
 # RESULTS_PATH = os.path.join(CWD, 'results/')
 # REF_SEQ_FILE = os.path.join(CWD, 'fa/202.fixed.fa')
 # CWD = '/mnt/sda1/My-Documents/Dropbox/casper_ecre/'
-FQ_DIR = '/scratch/cne/ecre/fq/202_hiseq_small/'
+FQ_DIR = '/scratch/cne/ecre/fq/202_hiseq/'
 CWD = '/scratch/cne/ecre/'
 DEFAULT_REGEX = '^s_G1_L001_R([1-2])_([0-9]+).fastq.([0-9]+).gz'
 DEFAULT_RESTRICTION_SITE_1 = 'CATATG'
@@ -221,9 +221,9 @@ def initiate_seqprep(file_number, bin_number, file1, file2,
     '''
 
     # Set name prefixes for outputs
-    output_f_prefix = '/scratch/cne/ecre/counts/202_hiseq_small/output.'+os.path.split(
+    output_f_prefix = '/scratch/cne/ecre/counts/202_hiseq/output.'+os.path.split(
         file1)[1]
-    output_r_prefix = '/scratch/cne/ecre/counts/202_hiseq_small/output.'+os.path.split(
+    output_r_prefix = '/scratch/cne/ecre/counts/202_hiseq/output.'+os.path.split(
         file2)[1]
 
     # Run SeqPrep. Refer to manual for the different parameters.
@@ -236,7 +236,7 @@ def initiate_seqprep(file_number, bin_number, file1, file2,
         '-2', output_r_prefix,
         '-3', output_f_prefix[:-3]+'.disc.fq.gz',
         '-4', output_r_prefix[:-3]+'.disc.fq.gz',
-        '-s', '/scratch/cne/ecre/counts/202_hiseq_small/output.'+file_number+'.'+bin_number+'.M.fq.gz',
+        '-s', '/scratch/cne/ecre/counts/202_hiseq/output.'+file_number+'.'+bin_number+'.M.fq.gz',
         '-A', adapter1, '-B', adapter2,
         '-X', '1.0', '-g', '-L', '5'])
 
@@ -373,7 +373,7 @@ def grep_merged_read(
         # Total number of unmerged sequences:
         # Assumes equal number of lines in forward and reverse file
         unmerged_files = os.path.join(
-            CWD, 'counts/202_hiseq_small/output.'+os.path.split(file1)[1])
+            CWD, 'counts/202_hiseq/output.'+os.path.split(file1)[1])
         command = 'zcat {input_file} | wc -l'.format(
             input_file=unmerged_files)
         unmerged_seqs = subprocess.Popen(
