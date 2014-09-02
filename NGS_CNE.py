@@ -192,10 +192,7 @@ def sort_to_bins(regex, file_list, number_position=2, bin_position=3):
             number_list[0], number_list[-1]+1)
         # Raises error if the list is not in sequential order
         if results is False:
-            print '-----------------------'
-            print coherence_test
-            print bin_i
-            print '-----------------------'
+            print results
             raise IOError(
                 'Missing files in bin {bin_number}'.format(bin_number=i))
 
