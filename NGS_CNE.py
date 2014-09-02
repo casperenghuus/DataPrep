@@ -161,8 +161,7 @@ def sort_to_bins(regex, file_list, number_position=2, bin_position=3):
     bin_list = []
     # Regex target
     target = re.compile(regex)
-    print len(file_list)
-    print '---------'
+
     # Assigns the maximum number of bins
     for i in range(1, len(file_list)+1):
         bin_i = []
@@ -180,7 +179,7 @@ def sort_to_bins(regex, file_list, number_position=2, bin_position=3):
         for entry in bin_i:
             file_number = int(target.search(entry).group(int(number_position)))
             # If the file number is not in the list, it is appended to it. Only
-            # unique numbers are kep (i.e. forward and reverse files would
+            # unique numbers are kept (i.e. forward and reverse files would
             # generate duplicates)
             if file_number not in number_list:
                 number_list.append(file_number)
@@ -193,6 +192,10 @@ def sort_to_bins(regex, file_list, number_position=2, bin_position=3):
             number_list[0], number_list[-1]+1)
         # Raises error if the list is not in sequential order
         if results is False:
+        	print '-----------------------'
+        	print coherence_test
+        	print bin_i
+        	print '-----------------------'
             raise IOError(
                 'Missing files in bin {bin_number}'.format(bin_number=i))
 
