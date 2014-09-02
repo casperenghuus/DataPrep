@@ -192,10 +192,10 @@ def sort_to_bins(regex, file_list, number_position=2, bin_position=3):
             number_list[0], number_list[-1]+1)
         # Raises error if the list is not in sequential order
         if results is False:
-        	print '-----------------------'
-        	print coherence_test
-        	print bin_i
-        	print '-----------------------'
+            print '-----------------------'
+            print coherence_test
+            print bin_i
+            print '-----------------------'
             raise IOError(
                 'Missing files in bin {bin_number}'.format(bin_number=i))
 
@@ -225,9 +225,9 @@ def initiate_seqprep(file_number, bin_number, file1, file2,
 
     # Set name prefixes for outputs
     output_f_prefix = '/scratch/cne/ecre/counts/202_hiseq_small/output.'+os.path.split(
-    	file1)[1]
+        file1)[1]
     output_r_prefix = '/scratch/cne/ecre/counts/202_hiseq_small/output.'+os.path.split(
-    	file2)[1]
+        file2)[1]
 
     # Run SeqPrep. Refer to manual for the different parameters.
     # Adapters are used.
