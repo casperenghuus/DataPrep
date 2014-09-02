@@ -6,11 +6,11 @@ import NGS_CNE
 
 # Set paths/files
 # CWD = os.getcwd()
-CWD = '/mnt/sda1/My-Documents/Dropbox/casper_ecre/'
+CWD = '/scratch/cne/ecre/'
 file_output1 = os.path.join(
-    CWD, 'results/sequences.allresults.txt')
+    CWD, 'counts/202_hiseq_small/sequences.allresults.txt')
 file_output2 = os.path.join(
-    CWD, 'results/stats.allresults.txt')
+    CWD, 'counts/202_hiseq_small/stats.allresults.txt')
 # REF_SEQ_FILE = os.path.join(CWD, 'fa/202.fixed.fa')
 
 target = re.compile('202.fixed.fa')
