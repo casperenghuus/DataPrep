@@ -456,7 +456,7 @@ def generate_file_list(get_files_regex, CWD=CWD):
     stats_list = []
 
     # Specifies the folder where statistics may be found
-    CWD = os.path.join(CWD, 'counts/')
+    CWD = os.path.join(CWD, 'counts/202_hsrna')
     
     target = re.compile(get_files_regex)
 
@@ -511,7 +511,7 @@ def merge_all(name_dict,
     # Go through each bin
     for file_table in sequence_list:
         # Append bin number to header
-        header.append('Bin {bin_number},'.format(bin_number=i+1))
+        header.append('Bin.{bin_number},'.format(bin_number=i+1))
 
         # Make an empty dictionary for bin i to
         # store the name and their frequency
