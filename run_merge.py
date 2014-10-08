@@ -8,9 +8,9 @@ import NGS_CNE
 # CWD = os.getcwd()
 CWD = '/scratch/cne/ecre/'
 file_output1 = os.path.join(
-    CWD, 'counts/202_hsrna/sequences.allresults.txt')
+    CWD, 'counts/202_hsrna/sequences.allresults.rna.txt')
 file_output2 = os.path.join(
-    CWD, 'counts/202_hsrna/stats.allresults.txt')
+    CWD, 'counts/202_hsrna/stats.allresults.rna.txt')
 # REF_SEQ_FILE = os.path.join(CWD, 'fa/202.fixed.fa')
 
 target = re.compile('202.fixed.fa')
