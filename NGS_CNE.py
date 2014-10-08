@@ -496,7 +496,7 @@ def merge_all(name_dict,
     assert len(set(name_dict.values())) == len(set(name_dict.values()))
 
     # Header for file:
-    header = ['Name,', 'Total,']
+    header = ['Name', 'Total']
 
     # Make a dictionary which will hold
     # the sum of frequencies across all bins
@@ -572,16 +572,16 @@ def merge_all(name_dict,
         # Row for each sequence name and its values across bins
         row = []
         # Add sequence name to first column
-        row.append(key_handle+',')
+        row.append(key_handle+)
         # Add the total frequency to the second column
-        row.append(str(sorted_total_freq[k][1])+',')
+        row.append(str(sorted_total_freq[k][1]))
         if sorted_total_freq[k][1] > 0:
             total_unique_sequences += 1
         # Go through each bin in sequential order and append its
         # frequency to the next available column
         for bn in range(0, len(bin_seq_storage.keys())):
             if key_handle in bin_seq_storage[bn].keys():
-                row.append(str(bin_seq_storage[bn][key_handle])+',')
+                row.append(str(bin_seq_storage[bn][key_handle]))
 
         # Append the finished row to bin_values
         bin_seq_values.append(row)
