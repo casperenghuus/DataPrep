@@ -572,7 +572,7 @@ def merge_all(name_dict,
         # Row for each sequence name and its values across bins
         row = []
         # Add sequence name to first column
-        row.append(key_handle+)
+        row.append(key_handle)
         # Add the total frequency to the second column
         row.append(str(sorted_total_freq[k][1]))
         if sorted_total_freq[k][1] > 0:
