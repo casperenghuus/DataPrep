@@ -15,9 +15,12 @@ from tabulate import tabulate
 # OUTPUT_PATH = os.path.join(CWD, 'gz/')
 # RESULTS_PATH = os.path.join(CWD, 'results/')
 # REF_SEQ_FILE = os.path.join(CWD, 'fa/202.fixed.fa')
-# CWD = '/mnt/sda1/My-Documents/Dropbox/casper_ecre/'
-FQ_DIR = '/scratch/cne/ecre/fq/202_hiseq/' #CHANGE!
+
+FQ_DIR = '/scratch/cne/ecre/fq/202_hsrna/' #CHANGE!
 CWD = '/scratch/cne/ecre/'
+# CWD = os.getcwd()
+# FQ_DIR = os.path.join(CWD, 'RNA_test/')
+
 DEFAULT_REGEX = '^s_G1_L001_R([1-2])_([0-9]+).fastq.([0-9]+).gz'
 DEFAULT_RESTRICTION_SITE_1 = 'CATATG'
 DEFAULT_RESTRICTION_SITE_2 = 'GGCGCGCC'
@@ -120,13 +123,13 @@ def load_reference_fasta(
                 # to file. Include header if set to True
                 if trim is not None:
                     if has_header is True:
-                        fh.write(seq_record.id+'\n')
+                        fh.write('>'+seq_record.id+'\n')
                     fh.write(trim.group(2)+'\n')
                 # Else, write the un-trimmed sequence to file. Include
                 # header of True
                 else:
                     if has_header is True:
-                        fh.write(seq_record.id+'\n')
+                        fh.write('>'+seq_record.id+'\n')
                     fh.write(seq_record.seq+'\n')
 
         return trimmed_ref_seq_file
