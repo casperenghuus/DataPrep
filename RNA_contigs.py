@@ -268,14 +268,14 @@ def write_stats(file_number, bin_number, file1, counts_dir=COUNTS_DIR):
         command = 'zcat {i} | wc -l'.format(i=file1)
         fh = subprocess.Popen(
             command, stdout=subprocess.PIPE, shell=True)
-        total_reads = float(fh.communicate()[0])/4
+        total_reads = int(fh.communicate()[0])/4
         table[0].append(str(total_reads))
 
         # Total merged reads
         command = 'zcat {i} | wc -l'.format(i=merged_file)
         fh = subprocess.Popen(
             command, stdout=subprocess.PIPE, shell=True)
-        merged_reads = float(fh.communicate()[0])/4
+        merged_reads = int(fh.communicate()[0])/4
         table[1].append(str(merged_reads))
 
         # Percentage merged:
@@ -285,13 +285,13 @@ def write_stats(file_number, bin_number, file1, counts_dir=COUNTS_DIR):
         command = 'zcat {i} | wc -l'.format(i=unmerged_files)
         fh = subprocess.Popen(
             command, stdout=subprocess.PIPE, shell=True)
-        table[3].append(str(float(fh.communicate()[0])/4))
+        table[3].append(str(int(fh.communicate()[0])/4))
 
         # Total number of discarded sequences:
         command = 'zcat {i} | wc -l'.format(i=disc_seq_file)
         fh = subprocess.Popen(
             command, stdout=subprocess.PIPE, shell=True)
-        table[4].append(str(float(fh.communicate()[0])/4))
+        table[4].append(str(int(fh.communicate()[0])/4))
 
         # Number of reference sequences:
         table[5].append('12653')
