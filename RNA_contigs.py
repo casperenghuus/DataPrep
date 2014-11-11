@@ -180,7 +180,7 @@ def run_bowtie(all_bins=ALL_BINS, ref_fasta=REF_FASTA,
         # Makes an output file where sequences matching to multiple
         # promoter have been removed (the reads are too short).
         bowtie_cmd = '''
-            bowtie -v 3 -l 10 -k 114 -p 8 \
+            bowtie -v 3 -l 10 -k 114 -p 16 \
                 --norc --best --strata --suppress 2,6 \
                 --un {u} -f {ref}  \
                 <(perl -pe 's/([^NATGC])\n/$1\t/' {ab} \
