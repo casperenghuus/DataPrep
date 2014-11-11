@@ -335,7 +335,7 @@ def final_stats(all_stats, all_seqs, counts_dir=COUNTS_DIR):
             with open(sl) as f:
                 i = 0
                 for l in f:
-                    table[i][1] += float(l.split(':')[1].lstrip().rstrip())
+                    table[i][1] += int(l.split(':')[1].lstrip().rstrip())
                     i += 1
 
         # Update some values which are 'unintentionally' changed
