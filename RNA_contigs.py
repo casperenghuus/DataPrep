@@ -66,7 +66,8 @@ def initiate_seqprep(file_number, bin_number, file1, file2,
 
 def seq_counts(output_regex=OUTPUT_REGEX,
     bin1_output=BIN1_OUTPUT,
-    bin2_output=BIN2_OUTPUT):
+    bin2_output=BIN2_OUTPUT,
+    counts_dir=COUNTS_DIR):
     '''
     1. Make a list of files based on the bin they were sorted to.
     2. Go through one bin at a time
@@ -80,7 +81,7 @@ def seq_counts(output_regex=OUTPUT_REGEX,
     bins = [[],[]]
 
     target = re.compile(output_regex)
-    for root, dirs, files in os.walk(CWD, followlinks=True):
+    for root, dirs, files in os.walk(counts_dir, followlinks=True):
         for file_string in files:
             file_match = target.search(file_string)
             if file_match:
