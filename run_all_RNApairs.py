@@ -12,4 +12,4 @@ if __name__ == '__main__':
 			forward_file=i[0], reverse_file=i[1])
 
 # BASH COMMAND:
-# python run_all_pairs.py | parallel -P 18 &
+# python run_all_RNApairs.py | parallel -P 16 &

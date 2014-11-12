@@ -10,9 +10,9 @@ from decimal import *
 from tabulate import tabulate
 
 # Default settings for ssh-server
-FQ_DIR = '/scratch/cne/ecre/fq/202_hsrna/' #CHANGE!
+FQ_DIR = '/scratch/cne/ecre/fq/202_hsdna/' #CHANGE!
 CWD = '/scratch/cne/ecre/'
-COUNTS_DIR = os.path.join(CWD, 'counts/202_hsrna/')
+COUNTS_DIR = os.path.join(CWD, 'counts/202_hsdna/')
 
 # Default paths for local computer
 # CWD = os.getcwd() # CHANGE!

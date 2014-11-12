@@ -16,7 +16,7 @@ from tabulate import tabulate
 # RESULTS_PATH = os.path.join(CWD, 'results/')
 # REF_SEQ_FILE = os.path.join(CWD, 'fa/202.fixed.fa')
 
-FQ_DIR = '/scratch/cne/ecre/fq/202_hsrna/' #CHANGE!
+FQ_DIR = '/scratch/cne/ecre/fq/202_hsdna/' #CHANGE!
 CWD = '/scratch/cne/ecre/'
 # CWD = os.getcwd()
 # FQ_DIR = os.path.join(CWD, 'RNA_test/')
