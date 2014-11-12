@@ -83,7 +83,10 @@ def seq_counts(output_regex=OUTPUT_REGEX,
     target = re.compile(output_regex)
     for files in os.walk(counts_dir, followlinks=True):
         for file_string in files:
+            print files
+            print '---------------'
             print file_string
+            print '---------------'
             file_match = target.search(file_string)
             if file_match:
                 if file_match.group(1) == '1':
