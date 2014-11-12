@@ -84,7 +84,7 @@ def seq_counts(output_regex=OUTPUT_REGEX,
     for root, dirs, files in os.walk(counts_dir, followlinks=True):
         for f in files:
             print '----------------'
-            print bins
+            print f
             print '----------------'
             file_match = target.search(f)
             if file_match:
