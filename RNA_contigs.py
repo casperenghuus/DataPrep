@@ -83,8 +83,6 @@ def seq_counts(output_regex=OUTPUT_REGEX,
     target = re.compile(output_regex)
     for root, dirs, files in os.walk(counts_dir, followlinks=True):
         for f in files:
-            print 'file =', f
-            print '---------------'
             file_match = target.search(f)
             if file_match:
                 if file_match.group(1) == '1':
@@ -106,7 +104,7 @@ def seq_counts(output_regex=OUTPUT_REGEX,
         regex = '^[NATCG]+(?=([NATCG]{2}CGCCATGACTAAGCTTTTCATTGTC))|^[NATCG]+$'
         cmd = "{z} | grep -E '{r}' | sort | uniq -c > {o}".format(
             z=zcat, r=regex, o=output)
-
+        print cmd
         bin_counts = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
 
         # Next bin
