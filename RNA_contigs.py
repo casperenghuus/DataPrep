@@ -19,7 +19,7 @@ COUNTS_DIR = os.path.join(CWD, 'counts/202_hsdna/')
 # FQ_DIR = CWD # CHANGE!
 
 DEFAULT_REGEX = '^s_G1_L001_R([1-2])_([0-9]+).fastq.([0-9]+).gz'
-OUTPUT_REGEX = '^output.[0-9]+.([0-9]).M.fq.gz'
+OUTPUT_REGEX = '^output.[0-9]+.([0-9])+.M.fq.gz'
 DEFAULT_RESTRICTION_SITE_1 = 'CATATG'
 DEFAULT_RESTRICTION_SITE_2 = 'GGCGCGCC'
 DEFAULT_ADAPTER1 = 'CGCCATGACTAAGCTTTTCATTGTC'
@@ -83,9 +83,6 @@ def seq_counts(output_regex=OUTPUT_REGEX,
     target = re.compile(output_regex)
     for root, dirs, files in os.walk(counts_dir, followlinks=True):
         for f in files:
-            print '----------------'
-            print f
-            print '----------------'
             file_match = target.search(f)
             if file_match:
                 if file_match.group(1) == '1':
