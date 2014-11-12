@@ -83,15 +83,16 @@ def seq_counts(output_regex=OUTPUT_REGEX,
     target = re.compile(output_regex)
     for root, dirs, files in os.walk(counts_dir, followlinks=True):
         for f in files:
+            print '----------------'
+            print bins
+            print '----------------'
             file_match = target.search(f)
             if file_match:
                 if file_match.group(1) == '1':
                     bins[0].append(os.path.join(counts_dir, f))
                 elif file_match.group(1) == '2':
                     bins[1].append(os.path.join(counts_dir, f))
-    print '----------------'
-    print bins
-    print '----------------'
+
     bin_num = 1
     for b in bins:
         # Toggle output file
