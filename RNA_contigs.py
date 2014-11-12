@@ -89,7 +89,9 @@ def seq_counts(output_regex=OUTPUT_REGEX,
                     bins[0].append(os.path.join(counts_dir, f))
                 elif file_match.group(1) == '2':
                     bins[1].append(os.path.join(counts_dir, f))
-
+    print '----------------'
+    print bins
+    print '----------------'
     bin_num = 1
     for b in bins:
         # Toggle output file
