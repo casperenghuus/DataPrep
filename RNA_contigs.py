@@ -81,14 +81,14 @@ def seq_counts(output_regex=OUTPUT_REGEX,
     bins = [[],[]]
 
     target = re.compile(output_regex)
-    for file_string in os.walk(counts_dir, followlinks=True):
-        print file_string
-        file_match = target.search(file_string)
-        if file_match:
-            if file_match.group(1) == '1':
-                bins[0].append(os.path.join(counts_dir, file_string))
-            elif file_match.group(1) == '2':
-                bins[1].append(os.path.join(counts_dir, file_string))
+    for files in os.walk(counts_dir, followlinks=True):
+        for file_string in files:
+            file_match = target.search(file_string)
+            if file_match:
+                if file_match.group(1) == '1':
+                    bins[0].append(os.path.join(counts_dir, file_string))
+                elif file_match.group(1) == '2':
+                    bins[1].append(os.path.join(counts_dir, file_string))
 
     bin_num = 1
     for b in bins:
