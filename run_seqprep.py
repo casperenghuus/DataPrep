@@ -43,11 +43,11 @@ def run_seqprep(file1, file2,
 
     # Prepare file names:
     merged_file_path = os.path.join(
-        CWD, 'counts/202_hsrna/output.'+file_number+'.'+bin_number+'.M.fq.gz') # CHANGE!
+        CWD, 'counts/202_hiseq/output.'+file_number+'.'+bin_number+'.M.fq.gz') # CHANGE!
     sequence_output = os.path.join(
-        CWD, 'counts/202_hsrna/sequences.results.'+file_number+'.'+bin_number+'.M.seq') # CHANGE!
+        CWD, 'counts/202_hiseq/sequences.results.'+file_number+'.'+bin_number+'.M.seq') # CHANGE!
     stats_output = os.path.join(
-        CWD, 'counts/202_hsrna/stats.results.'+file_number+'.'+bin_number+'.M.txt') # CHANGE!
+        CWD, 'counts/202_hiseq/stats.results.'+file_number+'.'+bin_number+'.M.txt') # CHANGE!
 
     print '\n### Initiating SeqPrep #'
     print '### Paired files:', file1, '<>', file2
