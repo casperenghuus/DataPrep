@@ -26,9 +26,10 @@ DEFAULT_RESTRICTION_SITE_1 = 'CATATG'
 DEFAULT_RESTRICTION_SITE_2 = 'GGCGCGCC'
 DEFAULT_ADAPTER2 = 'CATATGCGTAAAGGCGAAGAGCTGCTGTGTAGATCT'
 DEFAULT_ADAPTER1 = 'GGCGCGCCATGACTAAGCTTTTCATTGTCATGC'
-READ_TRIM_REGEX = '^(.*{restriction_site1})?(.*?)({restriction_site2}.*)?$'
+# READ_TRIM_REGEX = '^(.*{restriction_site1})?(.*?)({restriction_site2}.*)?$'
+READ_TRIM_REGEX = '(.*{restriction_site1})?(.*)({restriction_site2}){1,2}|({restriction_site2})?'
 
-def load_fq_files(CWD=FQ_DIR, target_regex=DEFAULT_REGEX):
+def load_fq_files(fq_dir=FQ_DIR, target_regex=DEFAULT_REGEX):
     '''
     Load files from folder and stores them in a list of tuples. the
     tuples contain the forward and reverse file from the same bin and
@@ -42,9 +43,9 @@ def load_fq_files(CWD=FQ_DIR, target_regex=DEFAULT_REGEX):
     # Regex target to grab input files.
     target = re.compile(target_regex)
 
-    # Searches through folders and files in the CWD. Grabs files
+    # Searches through folders and files in the fq_dir. Grabs files
     # matching the regex
-    for root, dirs, files in os.walk(CWD, followlinks=True):
+    for root, dirs, files in os.walk(fq_dir, followlinks=True):
         for file_string in files:
             file_match = target.search(file_string)
             if file_match:
@@ -72,7 +73,7 @@ def load_fq_files(CWD=FQ_DIR, target_regex=DEFAULT_REGEX):
                     # Appends the pairs as a tuple, (forward, reverse), to a
                     # list of file-pair-tuples.
                     file_pairs.append(
-                        (os.path.join(CWD, i), os.path.join(CWD, k)))
+                        (os.path.join(fq_dir, i), os.path.join(fq_dir, k)))
 
     return file_pairs
 
@@ -241,17 +242,17 @@ def initiate_seqprep(file_number, bin_number, file1, file2,
         '-4', output_r_prefix[:-3]+'.disc.fq.gz',
         '-s', '/scratch/cne/ecre/counts/202_hiseq/output.'+file_number+'.'+bin_number+'.M.fq.gz',
         '-A', adapter1, '-B', adapter2,
-        '-X', '1.0', '-g', '-L', '5']) #CHANGE
+        '-X', '1', '-g', '-L', '5']) #CHANGE
 
 def trim_fq(merged_file_path, restriction_site1=DEFAULT_RESTRICTION_SITE_1,
-            restriction_site2=DEFAULT_RESTRICTION_SITE_2):
+            restriction_site2=DEFAULT_RESTRICTION_SITE_2, read_trim_regex=READ_TRIM_REGEX):
     '''
     Trim sequences located in same directory as Handling_NGS_files.py (default)
     (the path is defined outside this function!).
     Yields the trimmed sequence (creates a generator)
     '''
     # Regular expression for forward and reverse targets
-    regex_target = re.compile(READ_TRIM_REGEX.format(
+    regex_target = re.compile(read_trim_regex.format(
         restriction_site1=restriction_site1,
         restriction_site2=restriction_site2),
         flags=re.IGNORECASE)
@@ -296,7 +297,7 @@ def grep_merged_read(
     restriction_site1=DEFAULT_RESTRICTION_SITE_1,
     restriction_site2=DEFAULT_RESTRICTION_SITE_2):
     '''
-    Takes the trimming_generator as input and matches the trimmed sequences to
+    Takes    the trimming_generator as input and matches the trimmed sequences to
     the 202.trimmed.fixed.fa file.
     Output this to a count file, were each unique, matched sequence is sorted
     by its frequency.
