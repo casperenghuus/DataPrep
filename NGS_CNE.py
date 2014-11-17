@@ -244,8 +244,8 @@ def initiate_seqprep(file_number, bin_number, file1, file2,
         '-A', adapter1, '-B', adapter2,
         '-X', '1', '-g', '-L', '5']) #CHANGE
 
-def trim_fq(merged_file_path, restriction_site1=DEFAULT_RESTRICTION_SITE_1,
-            restriction_site2=DEFAULT_RESTRICTION_SITE_2, read_trim_regex=READ_TRIM_REGEX):
+def trim_fq(merged_file_path, rs1=DEFAULT_RESTRICTION_SITE_1,
+            rs2=DEFAULT_RESTRICTION_SITE_2, read_trim_regex=READ_TRIM_REGEX):
     '''
     Trim sequences located in same directory as Handling_NGS_files.py (default)
     (the path is defined outside this function!).
@@ -253,8 +253,7 @@ def trim_fq(merged_file_path, restriction_site1=DEFAULT_RESTRICTION_SITE_1,
     '''
     # Regular expression for forward and reverse targets
     regex_target = re.compile(read_trim_regex.format(
-        restriction_site1=restriction_site1,
-        restriction_site2=restriction_site2),
+        rs1=rs1, rs2=rs2),
         flags=re.IGNORECASE)
 
     zcat_handle = subprocess.Popen(['zcat', merged_file_path],
