@@ -347,6 +347,8 @@ def grep_merged_read(
     # Writes the matched sequences to file and counts the total number
     # of reads as well as the total number of untrimmed sequences and
     # left + right trims.
+    for i in trimming_generator:
+        print i
     for trim_left, read, trim_right in trimming_generator:
         perfect_match.stdin.write(read+'\n')
         total_reads += 1
