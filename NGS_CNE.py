@@ -280,10 +280,16 @@ def trim_fq(merged_file_path, rs1=DEFAULT_RESTRICTION_SITE_1,
 
         # first attempt to match forward, then try reverse
         trim = regex_target.search(seq)
-        if trim is not None:
-            yield trim.groups()
+        try:
+            trim2 = regex_target.search(trim)
+            trim2.groups()
+            if trim2 is not None:
+                yield trim2.groups()
+        except:
+            if trim is not None:
+                    yield trim.groups()
         else:
-            raise ValueError('Invalid input seuence, trim regex failed!')
+            raise ValueError('Invalid input sequence, trim regex failed!')
 
     # Used so stdout read the entire line and not just single characters
     zcat_handle.wait()
