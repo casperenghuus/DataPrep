@@ -27,7 +27,7 @@ DEFAULT_RESTRICTION_SITE_2 = 'GGCGCGCC'
 DEFAULT_ADAPTER2 = 'CATATGCGTAAAGGCGAAGAGCTGCTGTGTAGATCT'
 DEFAULT_ADAPTER1 = 'GGCGCGCCATGACTAAGCTTTTCATTGTCATGC'
 # READ_TRIM_REGEX = '^(.*{restriction_site1})?(.*?)({restriction_site2}.*)?$'
-READ_TRIM_REGEX = '(.*{rs1})?(.*)({rs2}){1,2}|({rs3})?'
+READ_TRIM_REGEX = '(.*{rs1})?(.*)({rs2}){{1,2}}|({rs2})?'
 
 def load_fq_files(fq_dir=FQ_DIR, target_regex=DEFAULT_REGEX):
     '''
@@ -97,8 +97,7 @@ def load_reference_fasta(
     # Regex used to trim sequence. Case-insensitive
     regex_target = re.compile(read_trim_regex.format(
         rs1=restriction_site1,
-        rs2=restriction_site2,
-        rs3=restriction_site2),
+        rs2=restriction_site2),
         flags=re.IGNORECASE)
 
     # A file is made rather than a dictionary over the results. Can
