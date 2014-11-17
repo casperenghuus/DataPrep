@@ -97,7 +97,7 @@ def load_reference_fasta(
     # Regex used to trim sequence. Case-insensitive
     regex_target = re.compile(read_trim_regex.format(
         restriction_site1=restriction_site1,
-        restriction_site2=restriction_site2),
+        restriction_site2=restriction_site2,
         flags=re.IGNORECASE)
 
     # A file is made rather than a dictionary over the results. Can
