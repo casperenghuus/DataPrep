@@ -281,9 +281,8 @@ def trim_fq(merged_file_path, rs1=DEFAULT_RESTRICTION_SITE_1,
         re1 = re.compile('(?<=CATATG)(.+)', flags=re.IGNORECASE)
         re2 = re.compile('(.+?)(?=GGCGCGCC)', flags=re.IGNORECASE)
         re3 = re.compile('(?<=CATATG)(.+?)(?=GGCGCGCC)', flags=re.IGNORECASE)
-        
-        group to return
-        trim = [None,None,None]
+
+        trim = [None, None, None]
 
         # Check if both restriction sites are there
         try:
