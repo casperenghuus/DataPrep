@@ -297,6 +297,7 @@ def trim_fq(merged_file_path, rs1=DEFAULT_RESTRICTION_SITE_1,
             # Check if only CATATG is present
             try:
                 hit2 = re1.search(seq)
+                hit2.groups()
                 trim[0] = 1
                 trim[1] = str(hit2.group(1))
                 trim[2] = None
