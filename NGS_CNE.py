@@ -232,7 +232,7 @@ def initiate_seqprep(file_number, bin_number, file1, file2,
     # Run SeqPrep. Refer to manual for the different parameters.
     # Adapters are used.
     subprocess.check_call([
-        'SeqPrep',
+        '/opt/SeqPrep.dbg/SeqPrep',
         '-f', file1,
         '-r', file2,
         '-1', output_f_prefix,
@@ -277,28 +277,49 @@ def trim_fq(merged_file_path, rs1=DEFAULT_RESTRICTION_SITE_1,
             raise IOError('Incomplete record at end of file {}'.format(
                 merged_file_path))
 
-        # A comlicated trimming process: First, create a match
-        trim = regex_target.search(seq)
-        # Test if there are two GGCGCGCC sites.
-        # Raises error if there isn't
+        # Sets necessary REs
+        re1 = re.compile('(?<=CATATG)(.+)', flags=re.IGNORECASE)
+        re2 = re.compile('(.+?)(?=GGCGCGCC)', flags=re.IGNORECASE)
+        re3 = re.compile('(?<=CATATG)(.+?)(?=GGCGCGCC)', flags=re.IGNORECASE)
+        
+        group to return
+        trim = [None,None,None]
+
+        # Check if both restriction sites are there
         try:
-            trim2 = regex_target.search(trim)
-            trim2.groups()
-            if trim2 is not None:
-                yield trim2.groups()
-        # Test if there is one GGCGCGCC site.
+            hit1 = re3.search(seq)
+            hit1.groups()
+            trim[0] = 1
+            trim[1] = hit1.group(1)
+            trim[2] = 1
+            yield trim
+
         except:
-            # Raises error if there isn't
+            # Check if only CATATG is present
             try:
-                trim.groups()
-                if trim is not None:
-                    yield trim.groups()
-            # Yield a sequence found to have zero GGCGCGCC sites
+                hit2 = re1.search(seq)
+                trim[0] = 1
+                trim[1] = hit2.group(1)
+                trim[2] = None
+                yield trim
+
             except:
-                regex_target = re.compile('(.*CATATG)?(.*)(GGCGCGCC.*)?')
-                trim = regex_target.search(seq)
-                if trim is not None:
-                    yield trim.groups()
+                # Check if only GGCGCGCC is present
+                try:
+                    hit3 = re2.search(seq)
+                    hit3.groups()
+                    trim[0] = None
+                    trim[1] = hit3.group(1)
+                    trim[2] = 1
+                    yield trim
+
+                # No restriction sites present
+                except:
+                    trim[0] = None
+                    trim[1] = seq
+                    trim[2] = None
+                    yield trim
+
         else:
             raise ValueError('Invalid input sequence, trim regex failed!')
 
