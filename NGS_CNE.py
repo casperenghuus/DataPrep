@@ -26,8 +26,7 @@ DEFAULT_RESTRICTION_SITE_1 = 'CATATG'
 DEFAULT_RESTRICTION_SITE_2 = 'GGCGCGCC'
 DEFAULT_ADAPTER2 = 'CATATGCGTAAAGGCGAAGAGCTGCTGTGTAGATCT'
 DEFAULT_ADAPTER1 = 'GGCGCGCCATGACTAAGCTTTTCATTGTCATGC'
-# READ_TRIM_REGEX = '^(.*{restriction_site1})?(.*?)({restriction_site2}.*)?$'
-READ_TRIM_REGEX = '(.*{rs1})?(.*)({rs2}){{1,2}}|({rs2})?'
+READ_TRIM_REGEX ='(.*{rs1})?(.*)({rs2}.*)+?'
 
 def load_fq_files(fq_dir=FQ_DIR, target_regex=DEFAULT_REGEX):
     '''
@@ -286,7 +285,14 @@ def trim_fq(merged_file_path, rs1=DEFAULT_RESTRICTION_SITE_1,
             if trim2 is not None:
                 yield trim2.groups()
         except:
-            if trim is not None:
+            try:
+                trim.groups()
+                if trim is not None:
+                        yield trim.groups()
+            except:
+                regex_target = re.compile('(.*CATATG)?(.*)(GGCGCGCC.*)?')
+                trim = regex_target.search(seq)
+                if trim is not None:
                     yield trim.groups()
         else:
             raise ValueError('Invalid input sequence, trim regex failed!')
