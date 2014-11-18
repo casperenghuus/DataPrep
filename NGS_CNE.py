@@ -277,18 +277,23 @@ def trim_fq(merged_file_path, rs1=DEFAULT_RESTRICTION_SITE_1,
             raise IOError('Incomplete record at end of file {}'.format(
                 merged_file_path))
 
-        # first attempt to match forward, then try reverse
+        # A comlicated trimming process: First, create a match
         trim = regex_target.search(seq)
+        # Test if there are two GGCGCGCC sites.
+        # Raises error if there isn't
         try:
             trim2 = regex_target.search(trim)
             trim2.groups()
             if trim2 is not None:
                 yield trim2.groups()
+        # Test if there is one GGCGCGCC site.
         except:
+            # Raises error if there isn't
             try:
                 trim.groups()
                 if trim is not None:
-                        yield trim.groups()
+                    yield trim.groups()
+            # Yield a sequence found to have zero GGCGCGCC sites
             except:
                 regex_target = re.compile('(.*CATATG)?(.*)(GGCGCGCC.*)?')
                 trim = regex_target.search(seq)
@@ -359,8 +364,6 @@ def grep_merged_read(
     # Writes the matched sequences to file and counts the total number
     # of reads as well as the total number of untrimmed sequences and
     # left + right trims.
-    for i in trimming_generator:
-        print i
     for trim_left, read, trim_right in trimming_generator:
         perfect_match.stdin.write(read+'\n')
         total_reads += 1
@@ -474,7 +477,7 @@ def generate_file_list(get_files_regex, CWD=CWD):
 
     # Specifies the folder where statistics may be found
     CWD = os.path.join(CWD, 'counts/202_hiseq') #CHANGE!
-    
+
     target = re.compile(get_files_regex)
 
     # Prepares a list of files
