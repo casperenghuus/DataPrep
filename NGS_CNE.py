@@ -289,7 +289,7 @@ def trim_fq(merged_file_path, rs1=DEFAULT_RESTRICTION_SITE_1,
             hit1 = re3.search(seq)
             hit1.groups()
             trim[0] = 1
-            trim[1] = hit1.group(1)
+            trim[1] = str(hit1.group(1))
             trim[2] = 1
             yield trim
 
@@ -298,7 +298,7 @@ def trim_fq(merged_file_path, rs1=DEFAULT_RESTRICTION_SITE_1,
             try:
                 hit2 = re1.search(seq)
                 trim[0] = 1
-                trim[1] = hit2.group(1)
+                trim[1] = str(hit2.group(1))
                 trim[2] = None
                 yield trim
 
@@ -308,19 +308,16 @@ def trim_fq(merged_file_path, rs1=DEFAULT_RESTRICTION_SITE_1,
                     hit3 = re2.search(seq)
                     hit3.groups()
                     trim[0] = None
-                    trim[1] = hit3.group(1)
+                    trim[1] = str(hit3.group(1))
                     trim[2] = 1
                     yield trim
 
                 # No restriction sites present
                 except:
                     trim[0] = None
-                    trim[1] = seq
+                    trim[1] = str(seq)
                     trim[2] = None
                     yield trim
-
-        else:
-            raise ValueError('Invalid input sequence, trim regex failed!')
 
     # Used so stdout read the entire line and not just single characters
     zcat_handle.wait()
