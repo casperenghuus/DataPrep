@@ -16,7 +16,7 @@ from tabulate import tabulate
 # RESULTS_PATH = os.path.join(CWD, 'results/')
 # REF_SEQ_FILE = os.path.join(CWD, 'fa/202.fixed.fa')
 
-FQ_DIR = '/scratch/cne/ecre/fq/202_hiseq/' #CHANGE!
+FQ_DIR = '/scratch/cne/ecre/fq/202_hsdna/' #CHANGE!
 CWD = '/scratch/cne/ecre/'
 # CWD = os.getcwd()
 # FQ_DIR = os.path.join(CWD, 'RNA_test/')
@@ -297,7 +297,8 @@ def trim_fq(merged_file_path, rs1=DEFAULT_RESTRICTION_SITE_1,
             # Check if only CATATG is present
             try:
                 hit2 = re1.search(seq)
-                hit2.groups()
+                hit2.groups
+                ()
                 trim[0] = 1
                 trim[1] = str(hit2.group(1))
                 trim[2] = None
