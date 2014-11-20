@@ -6,13 +6,13 @@ from tabulate import tabulate
 import NGS_CNE
 import RNA_contigs
 
-CWD = '/scratch/cne/ecre/counts/202_hsdna/'
+CWD = '/scratch/cne/ecre/counts/202_hsrna/'
 # CWD = os.getcwd()
 
 if __name__ == "__main__":
 
     # Sets input-type (RNA or DNA)
-    ftype = 'DNA' #CHANGE!
+    ftype = 'RNA' #CHANGE!
     if ftype == 'DNA':
         all_results = os.path.join(CWD, 'sequences.allresults.dna.txt')
         all_stats = os.path.join(CWD, 'stats.allresults.dna.txt')

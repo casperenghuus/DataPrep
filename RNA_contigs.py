@@ -10,9 +10,9 @@ from decimal import *
 from tabulate import tabulate
 
 # Default settings for ssh-server
-FQ_DIR = '/scratch/cne/ecre/fq/202_hsdna/' #CHANGE!
+FQ_DIR = '/scratch/cne/ecre/fq/202_hsrna/' #CHANGE!
 CWD = '/scratch/cne/ecre/'
-COUNTS_DIR = os.path.join(CWD, 'counts/202_hsdna/')
+COUNTS_DIR = os.path.join(CWD, 'counts/202_hsrna/')
 
 # Default paths for local computer
 # CWD = os.getcwd() # CHANGE!
@@ -35,7 +35,7 @@ BOWTIE_OUT = os.path.join(COUNTS_DIR, 'bowtie_output.csv') # CHANGE!
 
 
 def initiate_seqprep(file_number, bin_number, file1, file2, 
-        counts_dir=COUNTS_DIR, adapter=DEFAULT_ADAPTER_DNA):
+        counts_dir=COUNTS_DIR, adapter=DEFAULT_ADAPTER_RNA):
     '''
     Run SeqPrep using forward and reverse dictionaries as input. Output files
     are located in the same directory as the Handling_NGS_files.py. Output
