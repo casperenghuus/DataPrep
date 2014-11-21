@@ -22,8 +22,10 @@ DEFAULT_REGEX = '^s_G1_L001_R([1-2])_([0-9]+).fastq.([0-9]+).gz'
 OUTPUT_REGEX = '^output.[0-9]+.([0-9])+.M.fq.gz'
 DEFAULT_RESTRICTION_SITE_1 = 'CATATG'
 DEFAULT_RESTRICTION_SITE_2 = 'GGCGCGCC'
-DEFAULT_ADAPTER_RNA = 'CGCCATGACTAAGCTTTTCATTGTC'
-DEFAULT_ADAPTER_DNA = 'GGCGCGCCATGACTAAGCTTTTCATTGTCATGC' # CGCC deleted from 5'-end, 3'-end extended
+DEFAULT_ADAPTER_RNA_FW = 'CGCCATGACTAAGCTTTTCATTGTC'
+DEFAULT_ADAPTER_RNA_RV = 'GACAATGAAAAGCTTAGTCATGGCG'
+DEFAULT_ADAPTER_DNA_FW = 'GGCGCGCCATGACTAAGCTTTTCATTGTCATGC'
+DEFAULT_ADAPTER_DNA_RV = 'GCATGACAATGAAAAGCTTAGTCATGGCGCGCC'
 READ_TRIM_REGEX = '^(.*{restriction_site1})?(.*?)({restriction_site2}.*)?$'
 
 BIN1_OUTPUT = os.path.join(COUNTS_DIR, 'bin1_counts.seq') # CHANGE!
@@ -35,7 +37,8 @@ BOWTIE_OUT = os.path.join(COUNTS_DIR, 'bowtie_output.csv') # CHANGE!
 
 
 def initiate_seqprep(file_number, bin_number, file1, file2, 
-        counts_dir=COUNTS_DIR, adapter=DEFAULT_ADAPTER_RNA):
+        counts_dir=COUNTS_DIR, adapter_fw=DEFAULT_ADAPTER_RNA_FW,
+        adapter_rv=DEFAULT_ADAPTER_RNA_RV):
     '''
     Run SeqPrep using forward and reverse dictionaries as input. Output files
     are located in the same directory as the Handling_NGS_files.py. Output
@@ -62,7 +65,7 @@ def initiate_seqprep(file_number, bin_number, file1, file2,
         '-3', output_f_prefix[:-3]+'.disc.fq.gz',
         '-4', output_r_prefix[:-3]+'.disc.fq.gz',
         '-s', counts_dir+'output.'+file_number+'.'+bin_number+'.M.fq.gz',
-        '-A', adapter,
+        '-A', adapter_fw, '-B', adapter_rv,
         '-X', '1', '-g', '-L', '5']) #CHANGE
 
 def seq_counts(output_regex=OUTPUT_REGEX,
