@@ -64,7 +64,7 @@ def initiate_seqprep(file_number, bin_number, file1, file2,
         '-3', output_f_prefix[:-3]+'.disc.fq.gz',
         '-4', output_r_prefix[:-3]+'.disc.fq.gz',
         '-s', counts_dir+'output.'+file_number+'.'+bin_number+'.M.fq.gz',
-        '-A', adapter_A, '-B', adapter_B
+        '-A', adapter_A, '-B', adapter_B,
         '-X', '1', '-g', '-L', '5']) #CHANGE
 
 def seq_counts(output_regex=OUTPUT_REGEX,
