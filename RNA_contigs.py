@@ -24,7 +24,8 @@ DEFAULT_RESTRICTION_SITE_1 = 'CATATG'
 DEFAULT_RESTRICTION_SITE_2 = 'GGCGCGCC'
 DEFAULT_ADAPTER_RNA_A = 'CGCCATGACTAAGCTTTTCATTGTC'
 DEFAULT_ADAPTER_RNA_B = 'CATATGCGTAAAGGCGAAGAGCTGCTGTGTAGATCT'
-DEFAULT_ADAPTER_DNA = 'GGCGCGCCATGACTAAGCTTTTCATTGTCATGC' # CGCC deleted from 5'-end, 3'-end extended
+DEFAULT_ADAPTER_DNA_A = 'GGCGCGCCATGACTAAGCTTTTCATTGTCATGC'
+DEFAULT_ADAPTER_DNA_B = 'CATATGCGTAAAGGCGAAGAGCTGCTGTGTAGATCT'
 READ_TRIM_REGEX = '^(.*{restriction_site1})?(.*?)({restriction_site2}.*)?$'
 
 BIN1_OUTPUT = os.path.join(COUNTS_DIR, 'bin1_counts.seq') # CHANGE!
@@ -172,34 +173,35 @@ def merge_bins(ftype, bin1=BIN1_OUTPUT, bin2=BIN2_OUTPUT, all_bins=ALL_BINS):
             # k = sequence
 
             # Check if both restriction sites are there
+            seq = k
             if ftype == 'DNA':
                 try:
-                    hit1 = re3.search(k)
+                    hit1 = re3.search(seq)
                     hit1.groups()
-                    k = str(hit1.group(1))
+                    seq = str(hit1.group(1))
 
                 except:
                     # Check if only CATATG is present
                     try:
-                        hit2 = re1.search(k)
+                        hit2 = re1.search(seq)
                         hit2.groups()
-                        k = str(hit2.group(1))
+                        seq = str(hit2.group(1))
 
                     except:
                         # Check if only GGCGCGCC is present
                         try:
-                            hit3 = re2.search(k)
+                            hit3 = re2.search(seq)
                             hit3.groups()
-                            k = str(hit3.group(1))
+                            seq = str(hit3.group(1))
 
                         # No restriction sites present
                         except:
-                            k = str(k)
+                            seq = str(seq)
 
             if ftype == 'RNA':
-                if len(k) > 2:
+                if len(seq) > 2:
                     # Trims first two bases of the RNA
-                    k = k[2:]
+                    seq = seq[2:]
 
             # Write to file
             header = '\t'.join(
@@ -207,7 +209,7 @@ def merge_bins(ftype, bin1=BIN1_OUTPUT, bin2=BIN2_OUTPUT, all_bins=ALL_BINS):
                 str(counts_dict[k][1]),
                 str(counts_dict[k][2]),
                 str(counts_dict[k][3])+'\n'])
-            ab.write(header+str(k)+'\n')
+            ab.write(header+str(seq)+'\n')
 
 def run_bowtie(all_bins=ALL_BINS, ref_fasta=REF_FASTA,
     unmapped=UNMAPPED, bowtie_out=BOWTIE_OUT,
