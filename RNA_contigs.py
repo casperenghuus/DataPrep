@@ -22,7 +22,8 @@ DEFAULT_REGEX = '^s_G1_L001_R([1-2])_([0-9]+).fastq.([0-9]+).gz'
 OUTPUT_REGEX = '^output.[0-9]+.([0-9])+.M.fq.gz'
 DEFAULT_RESTRICTION_SITE_1 = 'CATATG'
 DEFAULT_RESTRICTION_SITE_2 = 'GGCGCGCC'
-DEFAULT_ADAPTER_RNA = 'CGCCATGACTAAGCTTTTCATTGTC'
+DEFAULT_ADAPTER_RNA_A = 'CGCCATGACTAAGCTTTTCATTGTC'
+DEFAULT_ADAPTER_RNA_B = 'CATATGCGTAAAGGCGAAGAGCTGCTGTGTAGATCT'
 DEFAULT_ADAPTER_DNA = 'GGCGCGCCATGACTAAGCTTTTCATTGTCATGC' # CGCC deleted from 5'-end, 3'-end extended
 READ_TRIM_REGEX = '^(.*{restriction_site1})?(.*?)({restriction_site2}.*)?$'
 
@@ -34,8 +35,9 @@ UNMAPPED = os.path.join(COUNTS_DIR, 'unmapped.fa') # CHANGE!
 BOWTIE_OUT = os.path.join(COUNTS_DIR, 'bowtie_output.csv') # CHANGE!
 
 
-def initiate_seqprep(file_number, bin_number, file1, file2, 
-        counts_dir=COUNTS_DIR, adapter=DEFAULT_ADAPTER_RNA):
+def initiate_seqprep(file_number, bin_number, file1, file2,
+        counts_dir=COUNTS_DIR, adapter_A=DEFAULT_ADAPTER_RNA_A,
+        adapter_B=DEFAULT_ADAPTER_RNA_B):
     '''
     Run SeqPrep using forward and reverse dictionaries as input. Output files
     are located in the same directory as the Handling_NGS_files.py. Output
@@ -62,7 +64,7 @@ def initiate_seqprep(file_number, bin_number, file1, file2,
         '-3', output_f_prefix[:-3]+'.disc.fq.gz',
         '-4', output_r_prefix[:-3]+'.disc.fq.gz',
         '-s', counts_dir+'output.'+file_number+'.'+bin_number+'.M.fq.gz',
-        '-A', adapter,
+        '-A', adapter_A, '-B', adapter_B
         '-X', '1', '-g', '-L', '5']) #CHANGE
 
 def seq_counts(output_regex=OUTPUT_REGEX,
@@ -111,7 +113,7 @@ def seq_counts(output_regex=OUTPUT_REGEX,
         bin_num = 2
         bin_counts.communicate()
 
-def merge_bins(bin1=BIN1_OUTPUT, bin2=BIN2_OUTPUT, all_bins=ALL_BINS):
+def merge_bins(ftype, bin1=BIN1_OUTPUT, bin2=BIN2_OUTPUT, all_bins=ALL_BINS):
     '''Merges all sequences for all reads across all bins (uses SeqPrep output)
     A dictionary is made with:
     Key = sequence
@@ -126,6 +128,11 @@ def merge_bins(bin1=BIN1_OUTPUT, bin2=BIN2_OUTPUT, all_bins=ALL_BINS):
     seq = re.compile(seq_regex)
     count = re.compile(count_regex)
     counts_dict = {}
+
+    # Sets necessary REs for trimming DNA
+    re1 = re.compile('(?<=CATATG)(.+)', flags=re.IGNORECASE)
+    re2 = re.compile('(.+?)(?=GGCGCGCC)', flags=re.IGNORECASE)
+    re3 = re.compile('(?<=CATATG)(.+?)(?=GGCGCGCC)', flags=re.IGNORECASE)
 
     with open(bin1) as b1:
         print '\n>>>MAKING BIN1'
@@ -158,6 +165,43 @@ def merge_bins(bin1=BIN1_OUTPUT, bin2=BIN2_OUTPUT, all_bins=ALL_BINS):
     with open(all_bins, 'w') as ab:
         print '\n>>>WRITING FILE!'
         for k in counts_dict:
+            # [0] = ID
+            # [1] = Total counts
+            # [2] = Bin 1 counts
+            # [3] = Bin 2 counts
+            # k = sequence
+
+            # Check if both restriction sites are there
+            if ftype == 'DNA':
+                try:
+                    hit1 = re3.search(k)
+                    hit1.groups()
+                    k = str(hit1.group(1))
+
+                except:
+                    # Check if only CATATG is present
+                    try:
+                        hit2 = re1.search(k)
+                        hit2.groups()
+                        k = str(hit2.group(1))
+
+                    except:
+                        # Check if only GGCGCGCC is present
+                        try:
+                            hit3 = re2.search(k)
+                            hit3.groups()
+                            k = str(hit3.group(1))
+
+                        # No restriction sites present
+                        except:
+                            k = str(k)
+
+            if ftype == 'RNA':
+                if len(k) > 2:
+                    # Trims first two bases of the RNA
+                    k = k[2:]
+
+            # Write to file
             header = '\t'.join(
                 ['>'+str(counts_dict[k][0]),
                 str(counts_dict[k][1]),
@@ -254,7 +298,7 @@ def write_stats(file_number, bin_number, file1, counts_dir=COUNTS_DIR):
     unmerged_files = os.path.join(
         counts_dir+'output.'+os.path.split(file1)[1]) #CHANGE!
     disc_seq_file = unmerged_files[:-3]+'.disc.fq.gz'
-    
+
     stats_output = os.path.join(
         counts_dir+'stats.results.'+file_number+'.'+bin_number+'.M.txt') # CHANGE!
 
