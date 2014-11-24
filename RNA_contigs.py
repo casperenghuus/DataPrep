@@ -204,12 +204,13 @@ def merge_bins(ftype, bin1=BIN1_OUTPUT, bin2=BIN2_OUTPUT, all_bins=ALL_BINS):
                     seq = seq[2:]
 
             # Write to file
-            header = '\t'.join(
-                ['>'+str(counts_dict[k][0]),
-                str(counts_dict[k][1]),
-                str(counts_dict[k][2]),
-                str(counts_dict[k][3])+'\n'])
-            ab.write(header+str(seq)+'\n')
+            if len(seq) > 4:
+                header = '\t'.join(
+                    ['>'+str(counts_dict[k][0]),
+                    str(counts_dict[k][1]),
+                    str(counts_dict[k][2]),
+                    str(counts_dict[k][3])+'\n'])
+                ab.write(header+str(seq)+'\n')
 
 def run_bowtie(all_bins=ALL_BINS, ref_fasta=REF_FASTA,
     unmapped=UNMAPPED, bowtie_out=BOWTIE_OUT,
