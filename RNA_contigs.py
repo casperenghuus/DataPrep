@@ -201,7 +201,7 @@ def merge_bins(ftype, bin1=BIN1_OUTPUT, bin2=BIN2_OUTPUT, all_bins=ALL_BINS):
             if ftype == 'RNA':
                 if len(seq) > 2:
                     # Trims first two bases of the RNA
-                    seq = seq[2:]
+                    seq = seq[:-2]
 
             # Write to file
             if len(seq) > 4:
