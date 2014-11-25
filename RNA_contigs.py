@@ -287,7 +287,8 @@ def bowtie_to_file(all_results, bowtie_out=BOWTIE_OUT, ref_fasta=REF_FASTA):
     with open(bowtie_out) as bo:
         for l in bo:
             l = l.split()
-
+            print l
+            print l[5].split('--')
             # Gets the RBS name
             RBS = l[5].split('--')[1]
             # Get numbr of alternative alignments
