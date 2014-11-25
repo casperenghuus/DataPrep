@@ -267,6 +267,7 @@ def run_bowtie(all_bins=ALL_BINS, ref_fasta=REF_FASTA,
                     u=unmapped, ref=ref_fasta, ab=all_bins,
                     min=min_read_count, max=max_read_length,
                     bo=bowtie_out)
+    print bowtie_cmd
 
     p = subprocess.Popen(bowtie_cmd,
         stdout=subprocess.PIPE,
