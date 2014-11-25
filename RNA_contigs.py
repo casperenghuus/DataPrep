@@ -263,14 +263,14 @@ def run_bowtie(all_bins=ALL_BINS, ref_fasta=REF_FASTA,
                 | perl -ne '@l = split; ($l[1] > {min}
                     && length($l[4]) < {max}
                     && (s/\t([NATGC])/\n$1/ && print));')\
-                | awk '{if ($8==0) print}' > {bo}'''.format(
+                | awk '{if ($8>2) print}' > {bo}'''.format(
                     u=unmapped, ref=ref_fasta, ab=all_bins,
                     min=min_read_count, max=max_read_length,
                     bo=bowtie_out)
 
     p = subprocess.Popen(bowtie_cmd,
-        stdout= subprocess.PIPE,
-        shell= True,
+        stdout=subprocess.PIPE,
+        shell=True,
         executable='/bin/bash')
     p.wait()
 
@@ -287,12 +287,38 @@ def bowtie_to_file(all_results, bowtie_out=BOWTIE_OUT, ref_fasta=REF_FASTA):
     with open(bowtie_out) as bo:
         for l in bo:
             l = l.split()
-            # Update Total
-            bo_dict[str(l[4])][1] += int(l[1])
-            # Update Bin 1
-            bo_dict[str(l[4])][2] += int(l[2])
-            # Update Bin 2
-            bo_dict[str(l[4])][3] += int(l[3])
+
+            # Gets the RBS name
+            RBS = l[5].split('--')[1]
+            # Get numbr of alternative alignments
+            alt_aligns = int(l[8])
+            # Gets left-based offset
+            l_offset = int(l[6])
+
+            # If the left offset is not zero, the squence is not accepted
+            if l_offset > 0:
+                continue
+
+            # Get only the best alignment (get read of the alignments
+            # which wrongly aligns to the other 113 promoters)
+            # BBa_J61100 is never aligned perfectly!
+            if alt_aligns == 0:
+                # Update Total
+                bo_dict[str(l[4])][1] += int(l[1])
+                # Update Bin 1
+                bo_dict[str(l[4])][2] += int(l[2])
+                # Update Bin 2
+                bo_dict[str(l[4])][3] += int(l[3])
+
+            # Get the Anderson and BBa_J61100 RBSs.
+            # They map to 
+            if alt_aligns == 1 and RBS == 'BBa_J61100':
+                    # Update Total
+                    bo_dict[str(l[4])][1] += int(l[1])
+                    # Update Bin 1
+                    bo_dict[str(l[4])][2] += int(l[2])
+                    # Update Bin 2
+                    bo_dict[str(l[4])][3] += int(l[3])
 
     # Sort dictionary based on total counts in descending order
     sorted_dict = sorted(
