@@ -263,7 +263,7 @@ def run_bowtie(all_bins=ALL_BINS, ref_fasta=REF_FASTA,
                 | perl -ne '@l = split; ($l[1] > {min}
                     && length($l[4]) < {max}
                     && (s/\t([NATGC])/\n$1/ && print));')\
-                | awk '{if($8>2) print}' > {bo}'''.format(
+                | awk '{if($8>=1) print}' > {bo}'''.format(
                     u=unmapped, ref=ref_fasta, ab=all_bins,
                     min=min_read_count, max=max_read_length,
                     bo=bowtie_out)
