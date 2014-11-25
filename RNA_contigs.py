@@ -84,7 +84,7 @@ def seq_counts(output_regex=OUTPUT_REGEX,
     2.4 Go to next bin
     '''
     # First, make a list of all output files, sorted by bin
-    bin_files = [[],[]]
+    bin_files = [[], []]
 
     target = re.compile(output_regex)
     for root, dirs, files in os.walk(counts_dir, followlinks=True):
@@ -92,9 +92,9 @@ def seq_counts(output_regex=OUTPUT_REGEX,
             file_match = target.search(f)
             if file_match:
                 if file_match.group(1) == '1': # DBG = group()
-                    bins[0].append(os.path.join(counts_dir, f))
+                    bin_files[0].append(os.path.join(counts_dir, f))
                 elif file_match.group(1) == '2':
-                    bins[1].append(os.path.join(counts_dir, f))
+                    bin_files[1].append(os.path.join(counts_dir, f))
 
     for bin_num in len(bin_files):
         # Toggle output file
