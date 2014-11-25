@@ -141,36 +141,36 @@ def merge_bins(ftype, bin1=BIN1_OUTPUT, bin2=BIN2_OUTPUT, all_bins=ALL_BINS):
             counts = int(count.findall(l)[0])
 
             # Check if both restriction sites are there
-            seq = sequence
+            trimmed = sequence
             try:
-                hit1 = re3.search(seq)
+                hit1 = re3.search(trimmed)
                 hit1.groups()
-                seq = str(hit1.group(1))
+                trimmed = str(hit1.group(1))
 
             except:
                 # Check if only CATATG is present
                 try:
-                    hit2 = re1.search(seq)
+                    hit2 = re1.search(trimmed)
                     hit2.groups()
-                    seq = str(hit2.group(1))
+                    trimmed = str(hit2.group(1))
 
                 except:
                     # Check if only GGCGCGCC is present
                     try:
-                        hit3 = re2.search(seq)
+                        hit3 = re2.search(trimmed)
                         hit3.groups()
-                        seq = str(hit3.group(1))
+                        trimmed = str(hit3.group(1))
 
                     # No restriction sites present
                     except:
-                        seq = str(seq)
+                        trimmed = str(trimmed)
 
             if ftype == 'RNA':
-                if len(seq) > 2:
+                if len(trimmed) > 2:
                     # Trims first two bases of the RNA
-                    seq = seq[:-2]
+                    trimmed = trimmed[:-2]
 
-            counts_dict[seq] = [
+            counts_dict[trimmed] = [
                 str(i), counts, str(counts), 0]
             i += 1
 
@@ -181,43 +181,43 @@ def merge_bins(ftype, bin1=BIN1_OUTPUT, bin2=BIN2_OUTPUT, all_bins=ALL_BINS):
             counts = int(count.findall(l)[0])
             
             # Check if both restriction sites are there
-            seq = sequence
+            trimmed = sequence
             try:
-                hit1 = re3.search(seq)
+                hit1 = re3.search(trimmed)
                 hit1.groups()
-                seq = str(hit1.group(1))
+                trimmed = str(hit1.group(1))
 
             except:
                 # Check if only CATATG is present
                 try:
-                    hit2 = re1.search(seq)
+                    hit2 = re1.search(trimmed)
                     hit2.groups()
-                    seq = str(hit2.group(1))
+                    trimmed = str(hit2.group(1))
 
                 except:
                     # Check if only GGCGCGCC is present
                     try:
-                        hit3 = re2.search(seq)
+                        hit3 = re2.search(trimmed)
                         hit3.groups()
-                        seq = str(hit3.group(1))
+                        trimmed = str(hit3.group(1))
 
                     # No restriction sites present
                     except:
-                        seq = str(seq)
+                        trimmed = str(trimmed)
 
             if ftype == 'RNA':
-                if len(seq) > 2:
+                if len(trimmed) > 2:
                     # Trims first two bases of the RNA
-                    seq = seq[:-2]
+                    trimmed = trimmed[:-2]
 
             # A KeyError is raised if the value isn't there.
             # Try adds to existing values while except is a quick and 'dirty'
             # way to add a new, unique entry to the dictionary
             try:
-                counts_dict[seq][1] += counts
-                counts_dict[seq][3] = str(counts)
+                counts_dict[trimmed][1] += counts
+                counts_dict[trimmed][3] = str(counts)
             except:
-                counts_dict[seq] = [
+                counts_dict[trimmed] = [
                     str(i), counts, 0, str(counts)]
                 i += 1
 
@@ -232,13 +232,13 @@ def merge_bins(ftype, bin1=BIN1_OUTPUT, bin2=BIN2_OUTPUT, all_bins=ALL_BINS):
             # k = sequence
 
             # Write to file
-            if len(seq) > 4:
+            if len(k) > 4:
                 header = '\t'.join(
                     ['>'+str(counts_dict[k][0]),
                     str(counts_dict[k][1]),
                     str(counts_dict[k][2]),
                     str(counts_dict[k][3])+'\n'])
-                ab.write(header+str(seq)+'\n')
+                ab.write(header+str(k)+'\n')
 
 def run_bowtie(all_bins=ALL_BINS, ref_fasta=REF_FASTA,
     unmapped=UNMAPPED, bowtie_out=BOWTIE_OUT,
