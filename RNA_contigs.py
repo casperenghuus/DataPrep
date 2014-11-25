@@ -170,8 +170,13 @@ def merge_bins(ftype, bin1=BIN1_OUTPUT, bin2=BIN2_OUTPUT, all_bins=ALL_BINS):
                     # Trims first two bases of the RNA
                     trimmed = trimmed[:-2]
 
-            counts_dict[trimmed] = [
-                str(i), counts, str(counts), 0]
+            try:
+                counts_dict[trimmed][1] += counts
+                counts_dict[trimmed][3] += counts
+            except:
+                counts_dict[trimmed] = [
+                    str(i), counts, str(counts), 0]
+
             i += 1
 
     with open(bin2) as b2:
@@ -215,7 +220,7 @@ def merge_bins(ftype, bin1=BIN1_OUTPUT, bin2=BIN2_OUTPUT, all_bins=ALL_BINS):
             # way to add a new, unique entry to the dictionary
             try:
                 counts_dict[trimmed][1] += counts
-                counts_dict[trimmed][3] = str(counts)
+                counts_dict[trimmed][3] += counts
             except:
                 counts_dict[trimmed] = [
                     str(i), counts, 0, str(counts)]
