@@ -11,6 +11,7 @@ from tabulate import tabulate
 
 # Default settings for ssh-server
 FQ_DIR = '/scratch/cne/ecre/fq/202_hsrna/' #CHANGE!
+FQ_DIR_DBG = '/scratch/dbg/ecre/ct/202_hsrna/'
 CWD = '/scratch/cne/ecre/'
 COUNTS_DIR = os.path.join(CWD, 'counts/202_hsrna/')
 
@@ -19,6 +20,7 @@ COUNTS_DIR = os.path.join(CWD, 'counts/202_hsrna/')
 # FQ_DIR = CWD # CHANGE!
 
 DEFAULT_REGEX = '^s_G1_L001_R([1-2])_([0-9]+).fastq.([0-9]+).gz'
+DEFAULT_REGEX_DBG ='^202_hsrna.([1-2]).([0-9]+).M.seq.gz'
 OUTPUT_REGEX = '^output.[0-9]+.([0-9])+.M.fq.gz'
 DEFAULT_RESTRICTION_SITE_1 = 'CATATG'
 DEFAULT_RESTRICTION_SITE_2 = 'GGCGCGCC'
@@ -33,7 +35,7 @@ BIN2_OUTPUT = os.path.join(COUNTS_DIR, 'bin2_counts.seq') # CHANGE!
 ALL_BINS = os.path.join(COUNTS_DIR, 'all_bins.fa') # CHANGE!
 REF_FASTA = os.path.join(CWD, 'fa/202.trimmed.fixed.fa') # CHANGE!
 UNMAPPED = os.path.join(COUNTS_DIR, 'unmapped.fa') # CHANGE!
-BOWTIE_OUT = os.path.join(COUNTS_DIR, 'bowtie_output.csv') # CHANGE!
+BOWTIE_OUT = os.path.join(COUNTS_DIR, 'bowtie_output_raw.csv') # CHANGE!
 
 
 def initiate_seqprep(file_number, bin_number, file1, file2,
@@ -214,7 +216,7 @@ def merge_bins(ftype, bin1=BIN1_OUTPUT, bin2=BIN2_OUTPUT, all_bins=ALL_BINS):
 
 def run_bowtie(all_bins=ALL_BINS, ref_fasta=REF_FASTA,
     unmapped=UNMAPPED, bowtie_out=BOWTIE_OUT,
-    bowtie_cmd=None, min_read_count=1, max_read_length=200):
+    bowtie_cmd=None, min_read_count=5, max_read_length=200):
     '''Run Bowtie. Dictionary given as input
     '''
 
@@ -235,7 +237,7 @@ def run_bowtie(all_bins=ALL_BINS, ref_fasta=REF_FASTA,
                 | perl -ne '@l = split; ($l[1] > {min}
                     && length($l[4]) < {max}
                     && (s/\t([NATGC])/\n$1/ && print));') \
-                | cut -f -7 | uniq -uf 6 > {bo}'''.format(
+                > {bo}'''.format(
                     u=unmapped, ref=ref_fasta, ab=all_bins,
                     min=min_read_count, max=max_read_length,
                     bo=bowtie_out)
