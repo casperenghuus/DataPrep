@@ -287,14 +287,13 @@ def bowtie_to_file(all_results, bowtie_out=BOWTIE_OUT, ref_fasta=REF_FASTA):
     with open(bowtie_out) as bo:
         for l in bo:
             l = l.split()
-            print l
-            print l[5].split('--')
+
             # Gets the RBS name
-            RBS = l[5].split('--')[1]
+            RBS = l[4].split('--')[1]
             # Get numbr of alternative alignments
-            alt_aligns = int(l[8])
+            alt_aligns = int(l[7])
             # Gets left-based offset
-            l_offset = int(l[6])
+            l_offset = int(l[5])
 
             # If the left offset is not zero, the squence is not accepted
             if l_offset > 0:
