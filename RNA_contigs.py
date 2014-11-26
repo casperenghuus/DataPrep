@@ -10,9 +10,9 @@ from decimal import *
 from tabulate import tabulate
 
 # Default settings for ssh-server
-FQ_DIR = '/scratch/cne/ecre/fq/202_hsdna/' #CHANGE!
+FQ_DIR = '/scratch/cne/ecre/fq/202_hsrna/' #CHANGE!
 CWD = '/scratch/cne/ecre/'
-COUNTS_DIR = os.path.join(CWD, 'counts/202_hsdna/')
+COUNTS_DIR = os.path.join(CWD, 'counts/202_hsrna/')
 
 # Default paths for local computer
 # CWD = os.getcwd() # CHANGE!
@@ -186,12 +186,12 @@ def merge_bins(ftype, bin1=BIN1_OUTPUT, bin2=BIN2_OUTPUT, all_bins=ALL_BINS):
             # and Total counts to the correct spot.
             try:
                 counts_dict[trimmed][1] += counts
-                counts_dict[trimmed][3] += counts
+                counts_dict[trimmed][2] += counts
             # An error is raised if the trimmed sequece is absent.
             # Adds a new entry
             except:
                 counts_dict[trimmed] = [
-                    str(i), counts, str(counts), 0]
+                    str(i), counts, counts, 0]
 
             i += 1
 
@@ -246,7 +246,7 @@ def merge_bins(ftype, bin1=BIN1_OUTPUT, bin2=BIN2_OUTPUT, all_bins=ALL_BINS):
             # Adds a new entry if the trimmed sequence isn't there already.
             except:
                 counts_dict[trimmed] = [
-                    str(i), counts, 0, str(counts)]
+                    str(i), counts, 0, counts]
                 i += 1
 
     # WRITE FILE WHICH CAN BE CHECKED FOR ERRORS
