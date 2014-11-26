@@ -16,7 +16,8 @@ from tabulate import tabulate
 # RESULTS_PATH = os.path.join(CWD, 'results/')
 # REF_SEQ_FILE = os.path.join(CWD, 'fa/202.fixed.fa')
 
-FQ_DIR = '/scratch/cne/ecre/fq/202_hsrna/' #CHANGE!
+# FQ_DIR = '/scratch/cne/ecre/fq/202_hsrna/' #CHANGE!
+FQ_DIR = '/scratch/dbg/ecre/fq/202_hsdna/' # For small dataset
 CWD = '/scratch/cne/ecre/'
 # CWD = os.getcwd()
 # FQ_DIR = os.path.join(CWD, 'RNA_test/')
@@ -26,7 +27,7 @@ DEFAULT_RESTRICTION_SITE_1 = 'CATATG'
 DEFAULT_RESTRICTION_SITE_2 = 'GGCGCGCC'
 DEFAULT_ADAPTER2 = 'CATATGCGTAAAGGCGAAGAGCTGCTGTGTAGATCT'
 DEFAULT_ADAPTER1 = 'GGCGCGCCATGACTAAGCTTTTCATTGTCATGC'
-READ_TRIM_REGEX ='(.*{rs1})?(.*)({rs2}.*)+?'
+READ_TRIM_REGEX = '(.*{rs1})?(.*)({rs2}.*)+?'
 
 def load_fq_files(fq_dir=FQ_DIR, target_regex=DEFAULT_REGEX):
     '''
