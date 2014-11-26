@@ -105,8 +105,11 @@ def seq_counts(output_regex=OUTPUT_REGEX,
             print '\n>>> BIN2'
             output = bin2_output
 
+        # Uses zcat on all files for a specific bin
         zcat = 'zcat '+' '.join(bin_files[bin_num])
+        # Regex used to grep sequence while manually trimming off adapter
         regex = '^[NATCG]+(?=([NATCG]{2}CGCCATGACTAAGCTTTTCATTGTC))|^[NATCG]+$'
+        # This command creates the BinX file
         cmd = "{z} | grep -E '{r}' | sort | uniq -c > {o}".format(
             z=zcat, r=regex, o=output)
         bin_counts = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
@@ -122,7 +125,9 @@ def merge_bins(ftype, bin1=BIN1_OUTPUT, bin2=BIN2_OUTPUT, all_bins=ALL_BINS):
     Value[3] = Bin2 counts
     '''
 
+    # Get unique sequence while ignoring number. A strange way to do it though
     seq_regex = '(?=[ATCGN])[ATCGN]+'
+    # Gets the counts for each unique sequence
     count_regex = '[0-9]+'
     seq = re.compile(seq_regex)
     count = re.compile(count_regex)
@@ -135,12 +140,19 @@ def merge_bins(ftype, bin1=BIN1_OUTPUT, bin2=BIN2_OUTPUT, all_bins=ALL_BINS):
 
     with open(bin1) as b1:
         print '\n>>>MAKING BIN1'
+        # Sets ID = 1 for first entry
         i = 1
+        # For each line in Bin1
         for l in b1:
             sequence = str(seq.findall(l)[0])
             counts = int(count.findall(l)[0])
 
-            # Check if both restriction sites are there
+            # THE FOLLOWING CODE GENERATES AN ERROR THROUGH .groups()
+            # IF THE REGEX DOESN'T MATCH. IT THEN TRIES THE NEXT ONE 
+            # UNTIL THE SEQUENCE IS FULLY TRIMMED.
+
+            # Check if both restriction sites are there.
+            # If multiple GGCGCGCC, take only the last
             trimmed = sequence
             try:
                 hit1 = re3.search(trimmed)
@@ -156,6 +168,7 @@ def merge_bins(ftype, bin1=BIN1_OUTPUT, bin2=BIN2_OUTPUT, all_bins=ALL_BINS):
 
                 except:
                     # Check if only GGCGCGCC is present
+                    # If multiple GGCGCGCC, take only the last
                     try:
                         hit3 = re2.search(trimmed)
                         hit3.groups()
@@ -165,14 +178,19 @@ def merge_bins(ftype, bin1=BIN1_OUTPUT, bin2=BIN2_OUTPUT, all_bins=ALL_BINS):
                     except:
                         trimmed = str(trimmed)
 
+            # Checks if the input type is RNA. Trims off last 2 bp
             if ftype == 'RNA':
                 if len(trimmed) > 2:
                     # Trims first two bases of the RNA
                     trimmed = trimmed[:-2]
 
+            # If the sequene is present in the dictionary, add the Bin1
+            # and Total counts to the correct spot.
             try:
                 counts_dict[trimmed][1] += counts
                 counts_dict[trimmed][3] += counts
+            # An error is raised if the trimmed sequece is absent.
+            # Adds a new entry
             except:
                 counts_dict[trimmed] = [
                     str(i), counts, str(counts), 0]
@@ -185,7 +203,12 @@ def merge_bins(ftype, bin1=BIN1_OUTPUT, bin2=BIN2_OUTPUT, all_bins=ALL_BINS):
             sequence = str(seq.findall(l)[0])
             counts = int(count.findall(l)[0])
             
-            # Check if both restriction sites are there
+            # THE FOLLOWING CODE GENERATES AN ERROR THROUGH .groups()
+            # IF THE REGEX DOESN'T MATCH. IT THEN TRIES THE NEXT ONE 
+            # UNTIL THE SEQUENCE IS FULLY TRIMMED.
+
+            # Check if both restriction sites are there.
+            # If multiple GGCGCGCC, take only the last
             trimmed = sequence
             try:
                 hit1 = re3.search(trimmed)
@@ -201,6 +224,7 @@ def merge_bins(ftype, bin1=BIN1_OUTPUT, bin2=BIN2_OUTPUT, all_bins=ALL_BINS):
 
                 except:
                     # Check if only GGCGCGCC is present
+                    # If multiple GGCGCGCC, take only the last
                     try:
                         hit3 = re2.search(trimmed)
                         hit3.groups()
@@ -221,6 +245,7 @@ def merge_bins(ftype, bin1=BIN1_OUTPUT, bin2=BIN2_OUTPUT, all_bins=ALL_BINS):
             try:
                 counts_dict[trimmed][1] += counts
                 counts_dict[trimmed][3] += counts
+            # Adds a new entry if the trimmed sequence isn't there already.
             except:
                 counts_dict[trimmed] = [
                     str(i), counts, 0, str(counts)]
@@ -256,8 +281,6 @@ def run_bowtie(all_bins=ALL_BINS, ref_fasta=REF_FASTA,
         # then feed the two-column file to bowtie, then filter on minimum
         # read count and maximum read length through perl
 
-        # CORES ARE SET TO 8! Change to -p 16 for server!!
-        # min_read_count HAS BEEN CHANGED! CHANGE BACK TO 5 ON SERVER!!
         # Makes an output file where sequences matching to multiple
         # promoter have been removed (the reads are too short).
         bowtie_cmd = '''
@@ -268,7 +291,7 @@ def run_bowtie(all_bins=ALL_BINS, ref_fasta=REF_FASTA,
                 | perl -ne '@l = split; ($l[1] > {min}
                     && length($l[4]) < {max}
                     && (s/\t([NATGC])/\n$1/ && print));')\
-                | awk '{{if($8 >=1) print}}' > {bo}'''.format(
+                | awk '{{if($8 <=1) print}}' > {bo}'''.format(
                     u=unmapped, ref=ref_fasta, ab=all_bins,
                     min=min_read_count, max=max_read_length,
                     bo=bowtie_out)
@@ -280,10 +303,17 @@ def run_bowtie(all_bins=ALL_BINS, ref_fasta=REF_FASTA,
     p.wait()
 
 def bowtie_to_file(all_results, bowtie_out=BOWTIE_OUT, ref_fasta=REF_FASTA):
+    '''
+    Takes the bowtie-output and writes it to sequeces.allresults.xNA.txt.
+    '''
+
+    # Dictionary to hold the Promoter--RBS
     bo_dict = {}
+    # Header to print to file
     file_header = ['Name', 'Total', 'Bin.1', 'Bin.2']
 
-    # Makes dictionary with key = RBS, value = sequence
+    # Makes dictionary with key = Promoter--RBS, value = sequence
+    # For each sequence in the reference fasta
     for seq_record in SeqIO.parse(ref_fasta, 'fasta'):
         name = str(seq_record.id)
         bo_dict[name] = [name, 0,0,0]
@@ -331,6 +361,7 @@ def bowtie_to_file(all_results, bowtie_out=BOWTIE_OUT, ref_fasta=REF_FASTA):
         key=operator.itemgetter(1),
         reverse=True)
 
+    # Write to file
     with open(all_results, 'w') as ar:
         ar.write(tabulate(sorted_dict, file_header, tablefmt='plain'))
 
@@ -347,6 +378,7 @@ def write_stats(file_number, bin_number, file1, counts_dir=COUNTS_DIR):
     -Sequence coverage = present_seq_tracker / len(id_seq_dict.keys())
     '''
 
+    # Table to write after appending numbers to it
     table = [
         ['Total number of sequences given as input:'],
         ['Total merged sequences:'],
@@ -355,19 +387,20 @@ def write_stats(file_number, bin_number, file1, counts_dir=COUNTS_DIR):
         ['Total discarded sequences:'],
         ['Total reference sequences:']]
 
+    # File paths
     merged_file = os.path.join(
-        counts_dir+'output.'+file_number+'.'+bin_number+'.M.fq.gz') # CHANGE!
+        counts_dir+'output.'+file_number+'.'+bin_number+'.M.fq.gz')
     unmerged_files = os.path.join(
-        counts_dir+'output.'+os.path.split(file1)[1]) #CHANGE!
+        counts_dir+'output.'+os.path.split(file1)[1])
     disc_seq_file = unmerged_files[:-3]+'.disc.fq.gz'
-
     stats_output = os.path.join(
-        counts_dir+'stats.results.'+file_number+'.'+bin_number+'.M.txt') # CHANGE!
+        counts_dir+'stats.results.'+file_number+'.'+bin_number+'.M.txt')
 
     # Sets significant numbers for calculations (using decimal package)
     getcontext().prec = 3
 
     # Writes stats to file. Should be made a separate function...
+    # ... But it's not
     with open(stats_output, 'w') as so:
 
         # CALCULATIONS/VARIABLES REQUIRED BEFORE WRITING TO FILE:
@@ -403,7 +436,7 @@ def write_stats(file_number, bin_number, file1, counts_dir=COUNTS_DIR):
         # Number of reference sequences:
         table[5].append('12653')
 
-        # Write to file:
+        # WRITE TO FILE
         so.write(tabulate(table, tablefmt='plain'))
 
 def final_stats(all_stats, all_seqs, counts_dir=COUNTS_DIR):
@@ -426,6 +459,7 @@ def final_stats(all_stats, all_seqs, counts_dir=COUNTS_DIR):
                 file_path = os.path.join(root, file_string)
                 stat_files.append(file_path)
 
+    # Table to be updated with values. Used for writing file
     table = [
         ['Total number of sequences given as input:', 0],
         ['Total merged sequences:', 0],
