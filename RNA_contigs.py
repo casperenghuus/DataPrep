@@ -24,16 +24,16 @@ DEFAULT_RESTRICTION_SITE_1 = 'CATATG'
 DEFAULT_RESTRICTION_SITE_2 = 'GGCGCGCC'
 DEFAULT_ADAPTER_RNA_A = 'CGCCATGACTAAGCTTTTCATTGTC'
 DEFAULT_ADAPTER_RNA_B = 'CATATGCGTAAAGGCGAAGAGCTGCTGTGTAGATCT'
-DEFAULT_ADAPTER_DNA_A = 'GGCGCGCCATGACTAAGCTTTTCATTGTCATGC'
+DEFAULT_ADAPTER_DNA_A = 'CGCCATGACTAAGCTTTTCATTGTCATGC' # GGCG removed from 5'-end
 DEFAULT_ADAPTER_DNA_B = 'CATATGCGTAAAGGCGAAGAGCTGCTGTGTAGATCT'
 READ_TRIM_REGEX = '^(.*{restriction_site1})?(.*?)({restriction_site2}.*)?$'
 
-BIN1_OUTPUT = os.path.join(COUNTS_DIR, 'bin1_counts.seq') # CHANGE!
-BIN2_OUTPUT = os.path.join(COUNTS_DIR, 'bin2_counts.seq') # CHANGE!
-ALL_BINS = os.path.join(COUNTS_DIR, 'all_bins.fa') # CHANGE!
-REF_FASTA = os.path.join(CWD, 'fa/202.trimmed.fixed.fa') # CHANGE!
-UNMAPPED = os.path.join(COUNTS_DIR, 'unmapped.fa') # CHANGE!
-BOWTIE_OUT = os.path.join(COUNTS_DIR, 'bowtie_output.csv') # CHANGE!
+BIN1_OUTPUT = os.path.join(COUNTS_DIR, 'bin1_counts.seq')
+BIN2_OUTPUT = os.path.join(COUNTS_DIR, 'bin2_counts.seq')
+ALL_BINS = os.path.join(COUNTS_DIR, 'all_bins.fa')
+REF_FASTA = os.path.join(CWD, 'fa/202.trimmed.fixed.fa')
+UNMAPPED = os.path.join(COUNTS_DIR, 'unmapped.fa')
+BOWTIE_OUT = os.path.join(COUNTS_DIR, 'bowtie_output.csv')
 
 
 def initiate_seqprep(file_number, bin_number, file1, file2,
