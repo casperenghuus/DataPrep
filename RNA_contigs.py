@@ -10,17 +10,15 @@ from decimal import *
 from tabulate import tabulate
 
 # Default settings for ssh-server
-FQ_DIR = '/scratch/cne/ecre/fq/202_hsrna/' #CHANGE!
-FQ_DIR_DBG = '/scratch/dbg/ecre/ct/202_hsrna/'
+FQ_DIR = '/scratch/cne/ecre/fq/202_hsdna/' #CHANGE!
 CWD = '/scratch/cne/ecre/'
-COUNTS_DIR = os.path.join(CWD, 'counts/202_hsrna/')
+COUNTS_DIR = os.path.join(CWD, 'counts/202_hsdna/')
 
 # Default paths for local computer
 # CWD = os.getcwd() # CHANGE!
 # FQ_DIR = CWD # CHANGE!
 
 DEFAULT_REGEX = '^s_G1_L001_R([1-2])_([0-9]+).fastq.([0-9]+).gz'
-DEFAULT_REGEX_DBG ='^202_hsrna.([1-2]).([0-9]+).M.seq.gz'
 OUTPUT_REGEX = '^output.[0-9]+.([0-9])+.M.fq.gz'
 DEFAULT_RESTRICTION_SITE_1 = 'CATATG'
 DEFAULT_RESTRICTION_SITE_2 = 'GGCGCGCC'
